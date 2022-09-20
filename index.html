@@ -13,13 +13,19 @@
 <body>
     <div class="container">
         <div class="control-container">
-            <h2 class="title">Conway's Life Game</h2>
-            <div class="info">
-                <h4>Generation: <span id="generation"></span></h4>
-                <button id="btn">START</button>
+            <h2 id="title">Conway's Life Game</h2>
+            <div class="board">
+                <div class="info">
+                    <h4>Generation: <span id="generation"></span></h4>
+                    <h4>Life: <span id="life">20</span></h4>
+                </div>
+                <div class="btns">
+                    <button class="btn" id="btn">start</button>
+                    <button class="btn" id="reset">reset</button>
+                </div>
             </div>
         </div>
-        <div class="grid-container">
+        <div id="grid-container">
 
         </div>
     </div>

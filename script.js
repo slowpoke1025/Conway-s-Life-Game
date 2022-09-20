@@ -1,80 +1,115 @@
 
 const btn = document.getElementById("btn")
-const ROW_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-row-num")
-const COL_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-col-num")
+const reset = document.getElementById("reset")
+
+// document.documentElement.style.setProperty("--grid-row-num", 50)
+let ROW_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-row-num")
+let COL_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-col-num")
+
 const generation = document.getElementById("generation")
+const life = document.getElementById("life")
+life.textContent = 0;
+generation.textContent = 0;
 
-const map = new Array(ROW_NUM);
-for (let i = 0; i < ROW_NUM; i++) {
-    map[i] = []
-}
+let MAP; // new Array(ROW_NUM)
 
 
-const container = document.querySelector(".grid-container")
-for (let i = 0; i < ROW_NUM; ++i) {
-    const row = document.createElement("div")
-    row.className = "grid-row"
-    container.append(row)
-    for (let j = 0; j < COL_NUM; ++j) {
-        const col = document.createElement("div")
-        col.className = "grid"
-        row.append(col)
+function initMap() {
+    MAP = new Array(ROW_NUM);
+    for (let i = 0; i < ROW_NUM; i++) {
+        MAP[i] = []
     }
 }
 
+
+const container = document.getElementById("grid-container")
+createGrid()
+initMap()
+
+// window.addEventListener("resize", e => {
+//     ROW_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-row-num")
+//     COL_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-col-num")
+//     createGrid()
+//     initMap()
+
+// })
 const grids = document.querySelectorAll(".grid")
 
 let start = false
+let time
 
 document.addEventListener("click", e => {
 
-    if (e.target.matches(".grid")) {
-        if (G > 0) {
-            G = 0
+    if (!start && e.target.matches(".grid")) {
+        if (generation.textContent > 0) {
             generation.textContent = 0
         }
         e.target.classList.toggle("exist")
+        updateLife()
     }
 })
 
-let time
+
 btn.addEventListener("click", e => {
 
-    if (start) {
-        start = false
-        btn.textContent = "START"
-        return
-    }
+    if (start)
+        return stop()
 
     start = true
+    container.classList.add("start")
     btn.textContent = "STOP"
+    btn.classList.add("stop")
+
     time = new Date().getTime()
     animate()
+    e.stopPropagation()
+})
 
+reset.addEventListener("click", e => {
+    [...document.getElementsByClassName("exist")].forEach(life => life.classList.remove("exist"))
+    life.textContent = 0;
+    generation.textContent = 0
+    stop()
+    e.stopPropagation()
 })
 
 
 function animate() {
 
     if (new Date().getTime() - time >= 500) {
-        initMap()
+        refreshMap()
         lifeCycle()
         time = new Date().getTime()
     }
 
-    if (!isOver()) {
-        requestAnimationFrame(animate)
-    } else {
-        start = false
-        btn.textContent = "START"
+    if (isOver()) {
+        return stop()
+    }
 
+    requestAnimationFrame(animate)
+}
+
+
+function createGrid() {
+    container.replaceChildren();
+    for (let i = 0; i < ROW_NUM; ++i) {
+        const row = document.createElement("div")
+        row.className = "grid-row"
+        container.append(row)
+        for (let j = 0; j < COL_NUM; ++j) {
+            const col = document.createElement("div")
+            col.className = "grid"
+            row.append(col)
+        }
     }
 }
 
 
 
-let G = 0
-generation.textContent = 0;
+function updateLife() {
+    life.textContent = document.getElementsByClassName("exist").length;
+}
+
 function lifeCycle() {
     for (let i = 0; i < ROW_NUM; ++i) {
         for (let j = 0; j < COL_NUM; ++j) {
@@ -87,7 +122,9 @@ function lifeCycle() {
 
         }
     }
-    generation.textContent = ++G
+    generation.textContent = Number(generation.textContent) + 1
+    updateLife()
+
 }
 
 
@@ -101,26 +138,26 @@ function countNeighbor(grid) {
 
     let I = grid.i === ROW_NUM - 1 ? 0 : 1;
     let J = grid.j === COL_NUM - 1 ? 0 : 1;
-    let r = { ii, I, jj, J }
+
 
     for (let i = ii; i <= I; ++i) {
         for (let j = jj; j <= J; ++j) {
-            if (map[grid.i + i][grid.j + j]) {
+            if (MAP[grid.i + i][grid.j + j]) {
                 ++total
             }
         }
     }
 
-    return map[grid.i][grid.j] ? total - 1 : total;
+    return MAP[grid.i][grid.j] ? total - 1 : total;
 }
 
 
 
-function initMap() {
+function refreshMap() {
     for (let i = 0; i < ROW_NUM; i++) {
         const base = i * COL_NUM
         for (let j = 0; j < COL_NUM; j++) {
-            map[i][j] = grids[base + j].matches(".exist")
+            MAP[i][j] = grids[base + j].matches(".exist")
         }
     }
 }
@@ -141,4 +178,6 @@ function isOver() {
 function stop() {
     start = false
     btn.textContent = "START"
+    btn.classList.remove("stop")
+    container.classList.remove("start")
 }
