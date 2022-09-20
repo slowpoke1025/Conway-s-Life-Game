@@ -38,16 +38,39 @@ const grids = document.querySelectorAll(".grid")
 let start = false
 let time
 
-document.addEventListener("click", e => {
 
-    if (!start && e.target.matches(".grid")) {
-        if (generation.textContent > 0) {
-            generation.textContent = 0
+if (window.innerWidth >= 1024) {
+    document.addEventListener("click", e => {
+
+        e.stopPropagation()
+        if (!start && e.target.matches(".grid")) {
+            if (generation.textContent > 0) {
+                generation.textContent = 0
+            }
+            e.target.classList.toggle("exist")
+            updateLife()
         }
-        e.target.classList.toggle("exist")
-        updateLife()
+    })
+}
+else {
+    document.addEventListener("mousedown", e => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (!start && e.target.matches(".grid")) {
+            if (generation.textContent > 0) {
+                generation.textContent = 0
+            }
+            e.target.classList.toggle("exist")
+            updateLife()
+        }
+    })
+    document.body.classList.add("mobile")
+    window.oncontextmenu = e => {
+        e.preventDefault()
+        e.stopPropagation()
+        return false
     }
-})
+}
 
 
 btn.addEventListener("click", e => {

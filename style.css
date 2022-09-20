@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 :root {
@@ -69,7 +70,7 @@
     background-color: #fff;
 }
 
-#grid-container:not(.start) .grid.exist:hover {
+body:not(.mobile) #grid-container:not(.start) .grid.exist:hover {
     background-color: red;
 }
 
