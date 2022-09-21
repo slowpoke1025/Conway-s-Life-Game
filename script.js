@@ -36,11 +36,12 @@ initMap()
 const grids = document.querySelectorAll(".grid")
 
 let start = false
-let time
+let time;
 
+let cancelFlag = false
 
-if (window.innerWidth >= 1024) {
-    document.addEventListener("click", e => {
+if (!"ontouchstart" in document.documentElement) {
+    container.addEventListener("click", e => {
 
         e.stopPropagation()
         if (!start && e.target.matches(".grid")) {
@@ -53,15 +54,32 @@ if (window.innerWidth >= 1024) {
     })
 }
 else {
-    document.addEventListener("mousedown", e => {
-        e.preventDefault()
-        e.stopPropagation()
+
+    container.addEventListener("touchstart", e => {
+
+        if (e.touches.length > 1)
+            cancelFlag = true
+    })
+
+    container.addEventListener("touchmove", e => {
+        if (!cancelFlag)
+            cancelFlag = true
+    })
+
+    container.addEventListener("touchend", e => {
+
         if (!start && e.target.matches(".grid")) {
-            if (generation.textContent > 0) {
-                generation.textContent = 0
+            if (!cancelFlag) {
+                if (generation.textContent > 0) {
+                    generation.textContent = 0
+                }
+                e.target.classList.toggle("exist")
+                updateLife()
+            } else {
+                if (e.touches.length === 0) {
+                    cancelFlag = false
+                }
             }
-            e.target.classList.toggle("exist")
-            updateLife()
         }
     })
     document.body.classList.add("mobile")
@@ -204,3 +222,4 @@ function stop() {
     btn.classList.remove("stop")
     container.classList.remove("start")
 }
+
