@@ -62,7 +62,7 @@
     border-right: none;
 }
 
-#grid-container:not(.start) .grid:hover {
+body:not(.mobile) #grid-container:not(.start) .grid:hover {
     background-color: #fff;
 }
 
