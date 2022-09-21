@@ -40,7 +40,8 @@ let time;
 
 let cancelFlag = false
 
-if (!"ontouchstart" in document.documentElement) {
+
+if (!("ontouchstart" in document.documentElement)) {
     container.addEventListener("click", e => {
 
         e.stopPropagation()
