@@ -30,7 +30,7 @@
 #grid-container {
     width: 100%;
 
-    background-color: var(--grid-bg-color);
+    /* background-color: var(--grid-bg-color); */
     border: 5px solid var(--grid-bd-color);
     display: grid;
     grid-template-rows: repeat(var(--grid-row-num), 1fr);
@@ -49,7 +49,9 @@
 .grid {
     border-right: 2px solid var(--grid-bd-color);
     border-bottom: 2px solid var(--grid-bd-color);
-    flex-basis: calc(100%/var(--grid-col-num));
+    /* flex-basis: calc(100%/var(--grid-col-num)); */
+    background-color: var(--grid-bg-color);
+    flex: 1 1 0;
     /*flex:auto*/
     aspect-ratio: 1/1;
 }
@@ -195,6 +197,5 @@ body:not(.mobile) #grid-container:not(.start) .grid.exist:hover {
     .grid {
         background-color: rgb(222, 27, 183);
     }
-
 
 }

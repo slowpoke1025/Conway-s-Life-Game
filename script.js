@@ -26,13 +26,18 @@ const container = document.getElementById("grid-container")
 createGrid()
 initMap()
 
-// window.addEventListener("resize", e => {
-//     ROW_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-row-num")
-//     COL_NUM = getComputedStyle(document.documentElement).getPropertyValue("--grid-col-num")
-//     createGrid()
-//     initMap()
+window.addEventListener("resize", e => {
+    let row = getComputedStyle(document.documentElement).getPropertyValue("--grid-row-num")
+    let col = getComputedStyle(document.documentElement).getPropertyValue("--grid-col-num")
 
-// })
+    if (col !== COL_NUM || row !== ROW_NUM) {
+        ROW_NUM = row
+        COL_NUM = col
+        createGrid()
+        initMap()
+    }
+
+})
 const grids = document.querySelectorAll(".grid")
 
 let start = false
